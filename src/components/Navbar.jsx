@@ -45,7 +45,7 @@ const Navbar = () => {
               to="/"
               className="text-xl font-bold text-slate-800 hover:text-blue-600 transition-colors duration-200"
             >
-              CivicPulse
+              UrbanVoice
             </Link>
             <p className="text-xs text-slate-500 hidden sm:block">
               Municipal Services
