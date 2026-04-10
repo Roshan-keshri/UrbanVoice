@@ -5,18 +5,19 @@ exports.getAllReports = async (req, res) => {
     const adminState = req.user.state;
     const { state, area } = req.query;
 
+    // Case-insensitive state matching so "Jharkhand" matches "jharkhand"
+    const stateValue = state || adminState;
     let filter = {
-      state: state || adminState, 
+      state: new RegExp(`^${stateValue}$`, "i"),
     };
 
     if (area) {
-      filter.area = area;
+      filter.area = new RegExp(area, "i");
     }
 
-    const reports = await Report.find(filter).populate(
-      "user",
-      "username email state area"
-    );
+    const reports = await Report.find(filter)
+      .populate("user", "username email state area")
+      .sort({ createdAt: -1 });
 
     res.json({ reports });
   } catch (err) {

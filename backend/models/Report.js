@@ -4,6 +4,7 @@ const reportSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
     description: { type: String, trim: true },
+    category: { type: String, trim: true },
     imageUrl: { type: String, default: "" },
     status: {
       type: String,

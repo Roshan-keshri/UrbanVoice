@@ -1,7 +1,30 @@
-// src/pages/Signup.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {
+  UserPlus,
+  User,
+  Mail,
+  Lock,
+  Shield,
+  MapPin,
+  Building2,
+  Eye,
+  EyeOff,
+  ArrowRight,
+  CheckCircle,
+  AlertTriangle,
+} from "lucide-react";
+import heroBg from "../assets/hero_city.png";
+
+const indianStates = [
+  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
+  "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
+  "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya",
+  "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim",
+  "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand",
+  "West Bengal",
+];
 
 const Signup = () => {
   const [form, setForm] = useState({
@@ -12,7 +35,10 @@ const Signup = () => {
     state: "",
     area: "",
   });
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -21,233 +47,270 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
+
     try {
       await axios.post("/api/auth/signup", form);
-      alert("Signup successful! Please login.");
-      navigate("/login");
+      setSuccess(true);
+      setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
-      console.error("Signup failed:", err);
-      alert(err.response?.data?.message || "Signup failed. Please try again.");
+      setError(err.response?.data?.message || "Signup failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-md">
-        {/* Header Section */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-            <svg
-              className="w-8 h-8 text-blue-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-            </svg>
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Left Branding Panel */}
+      <div className="hidden lg:flex lg:w-5/12 relative overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${heroBg})` }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/95 via-slate-900/85 to-indigo-900/80" />
+        <div className="relative z-10 flex flex-col justify-between p-12 w-full">
+          {/* Logo */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center">
+              <Building2 className="w-5 h-5 text-white" />
+            </div>
+            <span className="text-white text-xl font-bold">UrbanVoice</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">
-            Join Our Community
-          </h1>
-          <p className="text-gray-600 text-sm">
-            Help improve your local area by reporting issues
+
+          {/* Middle content */}
+          <div>
+            <h2 className="text-4xl font-extrabold text-white leading-tight mb-4">
+              Join the <br />
+              <span className="text-orange-400">Movement</span>
+            </h2>
+            <p className="text-slate-300 text-lg mb-8 max-w-md">
+              Create your account and start making your city a better place, one report at a time.
+            </p>
+
+            {/* Benefits */}
+            <div className="space-y-3">
+              {[
+                "Report civic issues with photos & GPS",
+                "Track real-time resolution status",
+                "Help prioritize issues in your community",
+                "Direct accountability from authorities",
+              ].map((benefit, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10"
+                >
+                  <CheckCircle className="w-4 h-4 text-orange-400 flex-shrink-0" />
+                  <span className="text-white text-sm">{benefit}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <p className="text-slate-500 text-sm">
+            © 2025 UrbanVoice · Designed by Roshan, IIIT Ranchi
           </p>
         </div>
+      </div>
 
-        {/* Form Container */}
-        <form
-          onSubmit={handleSubmit}
-          className="bg-white rounded-xl shadow-lg border border-gray-100 p-8 space-y-6"
-        >
-          <h2 className="text-xl font-semibold text-gray-800 text-center mb-6">
-            Create Account
-          </h2>
-
-          {/* Username Field */}
-          <div className="space-y-2">
-            <label
-              htmlFor="username"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Username
-            </label>
-            <input
-              id="username"
-              type="text"
-              name="username"
-              placeholder="Enter your username"
-              value={form.username}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400"
-              required
-            />
+      {/* Right Form Panel */}
+      <div className="flex-1 flex items-center justify-center px-6 py-10">
+        <div className="w-full max-w-lg">
+          {/* Mobile logo */}
+          <div className="lg:hidden flex items-center gap-3 mb-8 justify-center">
+            <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center">
+              <Building2 className="w-5 h-5 text-white" />
+            </div>
+            <span className="text-gray-900 text-xl font-bold">UrbanVoice</span>
           </div>
 
-          {/* Email Field */}
-          <div className="space-y-2">
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Email Address
-            </label>
-            <input
-              id="email"
-              type="email"
-              name="email"
-              placeholder="Enter your email"
-              value={form.email}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400"
-              required
-            />
+          <div className="text-center lg:text-left mb-6">
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Create Account</h1>
+            <p className="text-gray-500">Join thousands of active citizens</p>
           </div>
 
-          {/* Password Field */}
-          <div className="space-y-2">
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              name="password"
-              placeholder="Create a secure password"
-              value={form.password}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400"
-              required
-            />
-          </div>
+          {/* Success */}
+          {success && (
+            <div className="mb-6 bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center gap-3">
+              <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0" />
+              <div>
+                <p className="text-emerald-800 font-semibold text-sm">Account created successfully!</p>
+                <p className="text-emerald-600 text-xs">Redirecting to login...</p>
+              </div>
+            </div>
+          )}
 
-          {/* Role Field */}
-          <div className="space-y-2">
-            <label
-              htmlFor="role"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Account Type
-            </label>
-            <select
-              id="role"
-              name="role"
-              value={form.role}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 bg-white"
-            >
-              <option value="user">Citizen (Report Issues)</option>
-              <option value="admin">Administrator</option>
-            </select>
-          </div>
+          {/* Error */}
+          {error && (
+            <div className="mb-6 bg-red-50 border border-red-200 rounded-xl p-4 flex items-center gap-3">
+              <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0" />
+              <p className="text-red-700 text-sm font-medium">{error}</p>
+            </div>
+          )}
 
-          {/* State Field */}
-          <div className="space-y-2">
-            <label
-              htmlFor="state"
-              className="block text-sm font-medium text-gray-700"
-            >
-              State <span className="text-red-500">*</span>
-            </label>
-            <select
-              id="state"
-              name="state"
-              value={form.state}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 bg-white"
-              required
-            >
-              <option value="">Select your state</option>
-              <option value="andhra pradesh">Andhra Pradesh</option>
-              <option value="arunachal pradesh">Arunachal Pradesh</option>
-              <option value="assam">Assam</option>
-              <option value="bihar">Bihar</option>
-              <option value="chhattisgarh">Chhattisgarh</option>
-              <option value="goa">Goa</option>
-              <option value="gujarat">Gujarat</option>
-              <option value="haryana">Haryana</option>
-              <option value="himachal pradesh">Himachal Pradesh</option>
-              <option value="jharkhand">Jharkhand</option>
-              <option value="karnataka">Karnataka</option>
-              <option value="kerala">Kerala</option>
-              <option value="madhya pradesh">Madhya Pradesh</option>
-              <option value="maharashtra">Maharashtra</option>
-              <option value="manipur">Manipur</option>
-              <option value="meghalaya">Meghalaya</option>
-              <option value="mizoram">Mizoram</option>
-              <option value="nagaland">Nagaland</option>
-              <option value="odisha">Odisha</option>
-              <option value="punjab">Punjab</option>
-              <option value="rajasthan">Rajasthan</option>
-              <option value="sikkim">Sikkim</option>
-              <option value="tamil nadu">Tamil Nadu</option>
-              <option value="telangana">Telangana</option>
-              <option value="tripura">Tripura</option>
-              <option value="uttar pradesh">Uttar Pradesh</option>
-              <option value="uttarakhand">Uttarakhand</option>
-              <option value="west bengal">West Bengal</option>
-            </select>
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Role toggle */}
+            <div className="flex bg-gray-100 rounded-xl p-1">
+              {[
+                { value: "user", label: "Citizen", icon: User },
+                { value: "admin", label: "Admin", icon: Shield },
+              ].map((r) => (
+                <button
+                  key={r.value}
+                  type="button"
+                  onClick={() => setForm({ ...form, role: r.value })}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                    form.role === r.value
+                      ? "bg-white text-gray-900 shadow-sm"
+                      : "text-gray-500 hover:text-gray-700"
+                  }`}
+                >
+                  <r.icon className="w-4 h-4" />
+                  {r.label}
+                </button>
+              ))}
+            </div>
 
-          {/* Area Field */}
-          <div className="space-y-2">
-            <label
-              htmlFor="area"
-              className="block text-sm font-medium text-gray-700"
+            {/* Username & Email row */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                  Username
+                </label>
+                <div className="relative">
+                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <input
+                    type="text"
+                    name="username"
+                    placeholder="johndoe"
+                    value={form.username}
+                    onChange={handleChange}
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-800 placeholder-gray-400 text-sm"
+                    required
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                  Email
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="john@example.com"
+                    value={form.email}
+                    onChange={handleChange}
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-800 placeholder-gray-400 text-sm"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Password */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="Create a strong password"
+                  value={form.password}
+                  onChange={handleChange}
+                  className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-800 placeholder-gray-400 text-sm"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            {/* State & Area row */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                  State <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <select
+                    name="state"
+                    value={form.state}
+                    onChange={handleChange}
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-800 bg-white text-sm appearance-none"
+                    required
+                  >
+                    <option value="">Select state</option>
+                    {indianStates.map((s) => (
+                      <option key={s} value={s.toLowerCase()}>
+                        {s}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                  Area <span className="text-gray-400 font-normal text-xs">(Optional)</span>
+                </label>
+                <div className="relative">
+                  <Building2 className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <input
+                    type="text"
+                    name="area"
+                    placeholder="e.g., Sector 5"
+                    value={form.area}
+                    onChange={handleChange}
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-800 placeholder-gray-400 text-sm"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={loading || success}
+              className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-bold py-3.5 rounded-xl transition-all shadow-md shadow-orange-500/20 hover:shadow-orange-500/40 flex items-center justify-center gap-2 mt-2"
             >
-              Area/District{" "}
-              <span className="text-gray-400 text-xs">(Optional)</span>
-            </label>
-            <input
-              id="area"
-              type="text"
-              name="area"
-              placeholder="e.g., Downtown, Sector 5, etc."
-              value={form.area}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400"
-            />
-          </div>
+              {loading ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Creating Account...
+                </>
+              ) : (
+                <>
+                  Create Account
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </form>
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-sm"
-          >
-            Create Account
-          </button>
-
-          {/* Login Link */}
-          <div className="text-center pt-4 border-t border-gray-100">
-            <p className="text-sm text-gray-600">
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-500">
               Already have an account?{" "}
               <span
                 onClick={() => navigate("/login")}
-                className="text-blue-600 hover:text-blue-700 font-medium cursor-pointer underline-offset-2 hover:underline transition-colors duration-200"
+                className="text-orange-500 hover:text-orange-600 font-semibold cursor-pointer"
               >
-                Sign in here
+                Sign In
               </span>
             </p>
           </div>
-        </form>
-
-        {/* Footer Note */}
-        <p className="text-center text-xs text-gray-500 mt-6">
-          By creating an account, you agree to help make your community better
-        </p>
+        </div>
       </div>
     </div>
   );
