@@ -21,7 +21,7 @@ const generateToken = (user) => {
 const signup = async (req, res) => {
   const { username, email, password, role, state, area } = req.body;
 
-  if (!username || !email || !password || !role || !state) {
+  if (!username || !email || !password || !state) {
     return res
       .status(400)
       .json({ message: "All fields except area are required" });
@@ -46,7 +46,7 @@ const signup = async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      role,
+      role:role || "user", // Default to 'user' if role not provided
       state,
       area,
     });
