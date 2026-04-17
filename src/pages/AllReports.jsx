@@ -52,7 +52,7 @@ const categoryIcons = {
   safety: "🛡️",
   other: "📋",
 };
-
+// Admin view of all reports with filtering and status update access
 const AllReports = () => {
   const { user, token } = useContext(AuthContext);
   const navigate = useNavigate();
