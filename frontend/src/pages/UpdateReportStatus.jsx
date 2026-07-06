@@ -69,7 +69,7 @@ const UpdateReportStatus = () => {
 
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/admin/report/${reportId}/status`,
+        `/api/admin/report/${reportId}/status`,
         { status },
         { headers: { Authorization: `Bearer ${token}` } }
       );
