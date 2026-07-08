@@ -5,12 +5,13 @@
 
 **Empowering citizens. Enabling authorities. Building better cities.**
 
-A full-stack MERN application that bridges the gap between citizens and local governments — allowing people to report civic issues and track their resolution in real time.
+A full-stack MERN application that bridges the gap between citizens and local governments — with a fully automated CI/CD pipeline, cloud image storage, and production deployments on every push.
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Frontend-4CAF50?style=for-the-badge)](https://urban-voice-beta.vercel.app)
-[![API](https://img.shields.io/badge/Backend%20API-Live-2196F3?style=for-the-badge)](https://urbanvoice-1.onrender.com)
-[![MongoDB](https://img.shields.io/badge/Database-MongoDB%20Atlas-47A248?style=for-the-badge&logo=mongodb)](https://mongodb.com)
+[![Frontend](https://img.shields.io/badge/Frontend-Vercel-000000?style=for-the-badge&logo=vercel)](https://your-frontend-url.vercel.app)
+[![Backend](https://img.shields.io/badge/Backend-Render-46E3B7?style=for-the-badge)](https://your-backend-url.onrender.com)
+[![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-2088FF?style=for-the-badge&logo=github-actions)](https://github.com/features/actions)
 [![Docker](https://img.shields.io/badge/Containerized-Docker-2496ED?style=for-the-badge&logo=docker)](https://docker.com)
+[![MongoDB](https://img.shields.io/badge/Database-MongoDB%20Atlas-47A248?style=for-the-badge&logo=mongodb)](https://mongodb.com)
 
 </div>
 
@@ -18,13 +19,9 @@ A full-stack MERN application that bridges the gap between citizens and local go
 
 ## 📖 What is UrbanVoice?
 
-UrbanVoice is a civic-tech platform that allows **citizens** to report local issues — potholes, broken streetlights, sanitation problems, water supply failures — and enables **government administrators** to track, prioritize, and resolve them efficiently through a region-specific dashboard.
+UrbanVoice is a civic-tech platform that allows **citizens** to report local issues — potholes, broken streetlights, sanitation problems, water supply failures — and enables **government administrators** to track, prioritize, and resolve them through a region-specific dashboard.
 
-The platform is designed around three core principles:
-
-- **Transparency** — every report is trackable in real time, so citizens always know what's happening with their complaint
-- **Accountability** — administrators can only see and manage issues within their assigned region, ensuring clear ownership
-- **Community participation** — photo evidence, issue categories, and status updates make reporting as detailed and useful as possible
+What makes this project production-grade beyond just the features is the **fully automated DevOps pipeline** — every push to `main` triggers GitHub Actions, builds and pushes a Docker image to Docker Hub, and automatically redeploys the backend on Render. Zero manual deployment steps.
 
 > **Real-world inspiration:** India's civic infrastructure often suffers not from lack of resources, but from lack of visibility. UrbanVoice is built to solve exactly that.
 
@@ -37,69 +34,159 @@ The platform is designed around three core principles:
 | Feature | Description |
 |---|---|
 | 🔐 Secure Authentication | JWT-based login and registration with bcrypt password hashing |
-| 📝 Report Issues | Submit civic complaints with title, description, category, and optional photo evidence |
-| 📍 Location Tagging | Attach state and area information to every report |
+| 📝 Report Issues | Submit civic complaints with title, description, category, and location |
+| 🖼️ Photo Evidence | Upload issue images via **Cloudinary** — cloud-stored, optimized, and persistent |
+| 🔍 Filter & Browse | Filter all reported issues by category and location |
 | 📊 Track Status | Monitor your reports through `Submitted → In Progress → Resolved` lifecycle |
-| 📂 Report History | Full history of all your submitted issues in one place |
 | 👤 Profile Management | Update personal information and preferences |
 
 ### 🛡️ For Administrators
 
 | Feature | Description |
 |---|---|
-| 🗺️ Region-Based Access | Admins are assigned to specific states and areas — they can only see reports from their jurisdiction |
-| 🔍 Advanced Filtering | Filter reports by category, status, date, and location |
-| ✏️ Status Management | Update issue status and add resolution notes |
-| 📈 Regional Overview | Monitor all open, in-progress, and resolved complaints in their region |
-| 🚫 Cross-Region Isolation | Strict RBAC ensures no admin can view or modify issues outside their assigned area |
+| 🗺️ Region-Based Dashboard | View and manage issues only within assigned jurisdiction |
+| 🔍 Advanced Filtering | Filter by category, region, status, and date |
+| ✏️ Status Management | Update issue status and track resolution progress |
+| 🗑️ Content Moderation | Delete inappropriate or duplicate reports |
+| 📈 Platform Monitoring | Overview of all open, in-progress, and resolved issues |
 
 ---
 
 ## 🛠️ Tech Stack
 
+### Frontend
+| Technology | Purpose |
+|---|---|
+| React.js + Vite | UI framework with fast HMR dev server |
+| Tailwind CSS | Utility-first responsive styling |
+| React Router | Client-side routing |
+| Axios | HTTP client for API communication |
+
+### Backend
+| Technology | Purpose |
+|---|---|
+| Node.js + Express.js | Server runtime and REST API framework |
+| MongoDB Atlas | Cloud-hosted NoSQL database |
+| Mongoose ODM | Schema modeling and query layer |
+| JWT + bcrypt | Authentication and password hashing |
+| Cloudinary | Cloud image storage and optimization |
+| Multer | Multipart file upload handling |
+
+### DevOps & Infrastructure
+| Technology | Purpose |
+|---|---|
+| Docker + Docker Compose | Containerization for consistent environments |
+| GitHub Actions | Automated CI/CD pipeline |
+| Docker Hub | Docker image registry |
+| Render | Backend deployment (pulls from Docker Hub) |
+| Vercel | Frontend deployment with auto-deploy on push |
+
+---
+
+## 🏗️ Architecture
+
 ```
 ┌─────────────────────────────────────────────────────┐
-│                     Frontend                        │
-│  React.js  •  React Router  •  Tailwind CSS         │
-│  Axios  •  Lucide React Icons                       │
+│                  React Frontend                     │
+│        (Vite • Tailwind CSS • React Router)         │
 └────────────────────┬────────────────────────────────┘
-                     │  REST API (JSON)
+                     │  REST API (JSON over HTTPS)
 ┌────────────────────▼────────────────────────────────┐
-│                     Backend                         │
-│  Node.js  •  Express.js                             │
-│  JWT Authentication  •  Multer (file uploads)       │
-│  bcrypt  •  RBAC Middleware                         │
-└────────────────────┬────────────────────────────────┘
-                     │  Mongoose ODM
-┌────────────────────▼────────────────────────────────┐
-│                    Database                         │
-│  MongoDB Atlas  (cloud-hosted, persistent)          │
-└─────────────────────────────────────────────────────┘
-
-DevOps:  Docker  •  Docker Compose  •  Vercel  •  Render
+│                Express.js Backend                   │
+│  JWT Auth Middleware → RBAC Middleware → Controllers│
+└──────┬─────────────────────────────────┬────────────┘
+       │ Mongoose ODM                    │ Cloudinary SDK
+┌──────▼──────────┐             ┌────────▼────────────┐
+│  MongoDB Atlas  │             │     Cloudinary      │
+│  (Issue data,   │             │  (Image storage &   │
+│   user accounts)│             │   optimization)     │
+└─────────────────┘             └─────────────────────┘
 ```
 
 ---
 
-## 🏗️ Architecture & Design Decisions
+## 🔄 CI/CD Pipeline
 
-### Why MERN?
-MongoDB's flexible document schema is ideal for civic issue data — issue categories, status fields, and location metadata can evolve without requiring schema migrations. React's component model enables a dynamic, responsive dashboard with real-time filtering. Node.js and Express provide a lightweight, fast API layer.
+UrbanVoice uses two separate GitHub Actions workflows — one for the backend, one for the frontend.
 
-### Role-Based Access Control (RBAC)
-RBAC is implemented at both the middleware and query level:
-- Every API route is protected by an auth middleware that validates the JWT and extracts the user's role and region
-- Admin users have their MongoDB queries automatically scoped to their assigned state and area — they literally cannot query data outside their region
-- User routes are scoped to the authenticated user's own reports
+### Backend Pipeline
 
-### Image Upload Strategy
-Multer middleware handles multipart form data for image evidence uploads:
-- File type validation (images only) before storage
-- File size limits to prevent abuse
-- Files stored in the `uploads/` directory with hashed filenames to prevent collisions
+Every push to `main` triggers a full build → test → containerize → deploy cycle:
 
-### State Management
-React's built-in `useState` and `useEffect` hooks are used for local component state, with Axios handling all API communication. This keeps the frontend lightweight without needing Redux for a project of this scale in it.
+```
+git push to main
+       │
+       ▼
+GitHub Actions (backend.yml)
+       │
+       ├── Checkout repository
+       ├── Install dependencies
+       ├── Build Docker image
+       ├── Login to Docker Hub (via GitHub Secrets)
+       ├── Push image to Docker Hub
+       └── Trigger Render Deploy Hook
+                  │
+                  ▼
+         Render pulls latest image
+                  │
+                  ▼
+       ✅ Backend live and updated
+```
+
+### Frontend Pipeline
+
+```
+git push to main
+       │
+       ▼
+GitHub Actions (frontend.yml)
+       │
+       ├── Checkout repository
+       ├── Install dependencies
+       ├── Build React app (Vite production build)
+       └── ✅ Build verified
+                  │
+                  ▼
+       Vercel auto-deploys on push
+                  │
+                  ▼
+       ✅ Frontend live and updated
+```
+
+### GitHub Secrets Required
+
+| Secret | Description |
+|---|---|
+| `DOCKER_USERNAME` | Docker Hub username |
+| `DOCKER_TOKEN` | Docker Hub Personal Access Token |
+| `RENDER_DEPLOY_HOOK` | Render webhook URL to trigger backend redeploy |
+
+---
+
+## 🔐 Security Implementation
+
+```
+Incoming Request
+       │
+       ▼
+JWT Middleware ──── Invalid/Missing Token ──► 401 Unauthorized
+       │
+       ▼ Valid Token
+Role Middleware ─── Wrong Role ──────────── ► 403 Forbidden
+       │
+       ▼ Authorized
+Region Scoping ─── Queries auto-scoped to admin's assigned region
+       │
+       ▼
+MongoDB Atlas ─── Encrypted at rest • TLS in transit
+```
+
+**Key security measures:**
+- Passwords hashed with `bcrypt` (salt rounds: 10) — raw passwords never stored
+- JWTs carry role and region claims, verified on every protected request
+- File uploads validated for MIME type via Multer before reaching Cloudinary
+- All secrets managed via environment variables — zero hardcoded credentials
+- Admin queries are automatically region-scoped at the database layer
 
 ---
 
@@ -108,23 +195,14 @@ React's built-in `useState` and `useEffect` hooks are used for local component s
 ```
 UrbanVoice/
 │
-├── frontend/
-│   ├── src/
-│   │   ├── components/       # Reusable UI components
-│   │   ├── pages/            # Route-level page components
-│   │   │   ├── Home.jsx
-│   │   │   ├── Login.jsx
-│   │   │   ├── Register.jsx
-│   │   │   ├── UserDashboard.jsx
-│   │   │   ├── AdminDashboard.jsx
-│   │   │   └── ReportIssue.jsx
-│   │   ├── utils/            # Axios config, helpers
-│   │   └── App.jsx
-│   ├── Dockerfile
-│   └── package.json
+├── .github/
+│   └── workflows/
+│       ├── backend.yml        # Backend CI/CD — Docker build + Render deploy
+│       └── frontend.yml       # Frontend CI — Vite build verification
 │
 ├── backend/
-│   ├── controllers/          # Route handler logic
+│   ├── config/                # DB connection, Cloudinary config
+│   ├── controllers/           # Route handler logic
 │   │   ├── authController.js
 │   │   ├── issueController.js
 │   │   └── adminController.js
@@ -132,56 +210,82 @@ UrbanVoice/
 │   │   ├── authMiddleware.js  # JWT verification
 │   │   └── roleMiddleware.js  # Admin/User RBAC
 │   ├── models/
-│   │   ├── User.js           # User schema (citizens + admins)
-│   │   └── Issue.js          # Civic issue schema
+│   │   ├── User.js            # User schema (citizens + admins)
+│   │   └── Issue.js           # Civic issue schema with status tracking
 │   ├── routes/
 │   │   ├── authRoutes.js
 │   │   ├── issueRoutes.js
 │   │   └── adminRoutes.js
-│   ├── uploads/              # Stored issue images
+│   ├── uploads/               # Temporary local storage before Cloudinary upload
 │   ├── Dockerfile
 │   └── package.json
 │
-├── docker-compose.yml
-└── README.md
+├── frontend/
+│   ├── src/
+│   │   ├── components/        # Reusable UI components
+│   │   ├── pages/             # Route-level page components
+│   │   └── App.jsx
+│   ├── Dockerfile
+│   └── package.json
+│
+└── docker-compose.yml         # Local multi-service orchestration
 ```
 
 ---
 
-## 🔐 Security Implementation
+## 🌐 API Reference
 
-UrbanVoice uses a multi-layer security approach:
+### Authentication
+
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| `POST` | `/api/auth/register` | Register new citizen | No |
+| `POST` | `/api/auth/login` | Login (citizen or admin) | No |
+
+### Issues (Citizens)
+
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| `POST` | `/api/issues` | Submit a new civic issue with image | User |
+| `GET` | `/api/issues` | Get all issues (with filters) | User |
+| `GET` | `/api/issues/my` | Get current user's submitted issues | User |
+| `GET` | `/api/issues/:id` | Get a specific issue | User |
+
+### Admin Dashboard
+
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| `GET` | `/api/admin/issues` | Get all issues in admin's region | Admin |
+| `PATCH` | `/api/admin/issues/:id/status` | Update issue status | Admin |
+| `GET` | `/api/admin/issues/filter` | Filter by category/status/area | Admin |
+| `DELETE` | `/api/admin/issues/:id` | Delete inappropriate report | Admin |
+
+---
+
+## 📊 Issue Lifecycle
 
 ```
-Request
-   │
-   ▼
-JWT Middleware ──── Invalid/Missing Token ──► 401 Unauthorized
-   │
-   ▼ Valid Token
-Role Middleware ─── Wrong Role ──────────── ► 403 Forbidden
-   │
-   ▼ Authorized
-Region Scoping ─── Query auto-scoped to admin's region
-   │
-   ▼
-MongoDB Atlas ─── Encrypted at rest, TLS in transit
+Citizen submits report + photo
+           │
+           ▼
+      [ Submitted ]
+           │
+           │  Admin picks up the issue
+           ▼
+     [ In Progress ]
+           │
+           │  Issue resolved on ground
+           ▼
+      [ Resolved ] ✅
 ```
 
-**Key security measures:**
-- Passwords hashed with `bcrypt` (salt rounds: 10) before storage — raw passwords never hit the database
-- JWTs are signed with a secret key and carry role + region claims
-- All file uploads validated for MIME type before acceptance
-- Environment variables used for all secrets — no hardcoded credentials
-- Protected API routes reject unauthenticated requests before any business logic runs
+Each status change is timestamped and visible to the reporting citizen in real time.
 
 ---
 
 ## 🐳 Docker Setup
 
-The project is fully containerized with Docker Compose — one command spins up both frontend and backend.
-
-### Run with Docker
+### Run with Docker Compose
 
 ```bash
 # Clone the repository
@@ -189,17 +293,17 @@ git clone https://github.com/Roshan-keshri/UrbanVoice.git
 cd UrbanVoice
 
 # Start all services
-docker compose up --build
+docker-compose up --build
 
 # Stop all services
-docker compose down
+docker-compose down
 ```
 
-### Services started by Docker Compose
+### Services
 
 | Service | Port | Description |
 |---|---|---|
-| `frontend` | `5173` | React dev server |
+| `frontend` | `5173` | React + Vite dev server |
 | `backend` | `5000` | Express API server |
 
 ---
@@ -208,7 +312,8 @@ docker compose down
 
 ### Prerequisites
 - Node.js v18+
-- MongoDB Atlas account (or local MongoDB)
+- MongoDB Atlas account
+- Cloudinary account
 - Git
 
 ### 1. Clone the Repository
@@ -225,17 +330,21 @@ cd backend
 npm install
 ```
 
-Create a `.env` file in `/backend`:
+Create `.env` in `/backend`:
 
 ```env
-MONGO_URI=your_mongodb_atlas_connection_string
-JWT_SECRET=your_strong_jwt_secret_key
 PORT=5000
+MONGO_URI=your_mongodb_atlas_connection_string
+JWT_SECRET=your_strong_jwt_secret
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+CLIENT_URL=http://localhost:5173
 ```
 
 ```bash
 npm start
-# Backend runs on http://localhost:5000
+# → http://localhost:5000
 ```
 
 ### 3. Frontend Setup
@@ -245,7 +354,7 @@ cd ../frontend
 npm install
 ```
 
-Create a `.env` file in `/frontend`:
+Create `.env` in `/frontend`:
 
 ```env
 VITE_API_URL=http://localhost:5000
@@ -253,83 +362,20 @@ VITE_API_URL=http://localhost:5000
 
 ```bash
 npm run dev
-# Frontend runs on http://localhost:5173
+# → http://localhost:5173
 ```
-
----
-
-## 🌐 API Reference
-
-### Authentication
-
-| Method | Endpoint | Description | Auth Required |
-|---|---|---|---|
-| `POST` | `/api/auth/register` | Register new citizen | No |
-| `POST` | `/api/auth/login` | Login (citizen or admin) | No |
-
-### Issues (Citizens)
-
-| Method | Endpoint | Description | Auth Required |
-|---|---|---|---|
-| `POST` | `/api/issues` | Submit a new civic issue | Yes (User) |
-| `GET` | `/api/issues/my` | Get all issues by current user | Yes (User) |
-| `GET` | `/api/issues/:id` | Get a specific issue | Yes (User) |
-
-### Admin Dashboard
-
-| Method | Endpoint | Description | Auth Required |
-|---|---|---|---|
-| `GET` | `/api/admin/issues` | Get all issues in admin's region | Yes (Admin) |
-| `PATCH` | `/api/admin/issues/:id/status` | Update issue status | Yes (Admin) |
-| `GET` | `/api/admin/issues/filter` | Filter by category/status/area | Yes (Admin) |
-
----
-
-## 📊 Issue Lifecycle
-
-```
-Citizen submits report
-         │
-         ▼
-    [ Submitted ]
-         │
-         │ Admin picks up the issue
-         ▼
-   [ In Progress ]
-         │
-         │ Issue resolved on ground
-         ▼
-    [ Resolved ]
-```
-
-Each status change is timestamped and visible to the reporting citizen in real time.
 
 ---
 
 ## 🚀 Deployment
 
-| Layer | Platform | Notes |
+| Layer | Platform | How |
 |---|---|---|
 | Frontend | Vercel | Auto-deploys on push to `main` |
-| Backend | Render | Always-on web service |
-| Database | MongoDB Atlas | Free tier, cloud-hosted |
-
-Live URLs:
-- **Frontend:** https://urban-voice-beta.vercel.app
-- **Backend API:** https://urbanvoice-1.onrender.com
-
----
-
-## 🗺️ Roadmap — Future Enhancements
-
-- [ ] **Cloudinary integration** — cloud-based image storage to replace local `uploads/` directory
-- [ ] **Real-time notifications** — WebSocket-based alerts when issue status changes
-- [ ] **Email notifications** — transactional emails on report submission and resolution
-- [ ] **Interactive maps** — plot reported issues on a map with clustering by density
-- [ ] **Analytics dashboard** — charts showing issue categories, resolution times, regional trends
-- [ ] **AI-based complaint prioritization** — ML model to flag high-urgency issues automatically
-- [ ] **Issue heatmaps** — visualize which areas have the most unresolved complaints
-- [ ] **Progressive Web App (PWA)** — offline support and mobile install capability
+| Backend | Render | Pulls Docker image from Docker Hub via deploy hook |
+| Database | MongoDB Atlas | Cloud-hosted, free tier |
+| Image Storage | Cloudinary | SDK integrated in backend |
+| Docker Registry | Docker Hub | Images pushed by GitHub Actions |
 
 ---
 
@@ -337,14 +383,14 @@ Live URLs:
 
 Building UrbanVoice provided hands-on experience with:
 
-- **Full-stack MERN development** from scratch — schema design to production deployment
-- **JWT-based authentication** — implementing stateless auth with role claims
-- **Role-Based Access Control** — building middleware that restricts data at both route and query level
-- **File handling** — multipart form data, MIME validation, and secure upload pipelines with Multer
-- **Docker & Docker Compose** — containerizing a multi-service application for consistent environments
-- **MongoDB Atlas** — cloud-hosted database setup, connection pooling, and indexing for filtered queries
-- **Responsive UI** — building a dashboard that works across screen sizes with Tailwind CSS
-- **Production deployment** — deploying to Vercel (frontend) and Render (backend) with environment-based config
+- **Full-stack MERN development** — schema design to production deployment
+- **Cloudinary integration** — cloud image upload, storage, and optimization pipeline
+- **CI/CD with GitHub Actions** — writing multi-workflow YAML pipelines for separate frontend and backend
+- **Docker & Docker Compose** — containerizing a multi-service application and publishing to Docker Hub
+- **Render deployment via Docker** — triggering automated backend redeploys using deploy hooks
+- **JWT + RBAC** — stateless auth with role and region claims enforced at middleware and query level
+- **Multer file handling** — multipart upload validation before cloud storage
+- **MongoDB Atlas** — cloud database setup with Mongoose schema design for flexible civic data
 
 ---
 
@@ -353,6 +399,7 @@ Building UrbanVoice provided hands-on experience with:
 **Roshan Kumar Keshri**
 B.Tech (ECE) — Indian Institute of Information Technology, Ranchi (2023–2027)
 
+- 🌐 Portfolio: [roshan-portfolio-henna.vercel.app](https://roshan-portfolio-henna.vercel.app)
 - GitHub: [github.com/Roshan-keshri](https://github.com/Roshan-keshri)
 - LinkedIn: [linkedin.com/in/roshan-keshri](https://linkedin.com/in/roshan-keshri)
 - Email: keshriroshan44@gmail.com
@@ -361,6 +408,6 @@ B.Tech (ECE) — Indian Institute of Information Technology, Ranchi (2023–2027
 
 <div align="center">
 
-If you found this project useful or interesting, consider giving it a ⭐ on GitHub — it helps others discover it!
+If you found this project useful or interesting, consider giving it a ⭐ on GitHub!
 
 </div>
