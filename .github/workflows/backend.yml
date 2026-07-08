@@ -56,3 +56,8 @@ jobs:
       - name: Push Commit SHA Image
         if: github.event_name == 'push'
         run: docker push ${{ secrets.DOCKER_USERNAME }}/urbanvoice-backend:${{ github.sha }}
+
+      - name: Trigger Render Deployment
+        if: github.event_name == 'push'
+        run: |
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"        
