@@ -99,7 +99,7 @@ Multer middleware handles multipart form data for image evidence uploads:
 - Files stored in the `uploads/` directory with hashed filenames to prevent collisions
 
 ### State Management
-React's built-in `useState` and `useEffect` hooks are used for local component state, with Axios handling all API communication. This keeps the frontend lightweight without needing Redux for a project of this scale.
+React's built-in `useState` and `useEffect` hooks are used for local component state, with Axios handling all API communication. This keeps the frontend lightweight without needing Redux for a project of this scale in it.
 
 ---
 
