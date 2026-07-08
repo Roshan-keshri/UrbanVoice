@@ -14,9 +14,9 @@ on:
     paths:
       - "frontend/**"
 
-    jobs:
-    frontend:
-      runs-on: ubuntu-latest
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
 
     defaults:
       run:
