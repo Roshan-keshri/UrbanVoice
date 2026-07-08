@@ -4,14 +4,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "frontend/**"
+      - ".github/workflows/frontend.yml"
 
   pull_request:
     branches:
       - main
-
-jobs:
-  frontend:
-    runs-on: ubuntu-latest
+    paths:
+      - "frontend/**"
 
     defaults:
       run:
